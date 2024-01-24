@@ -1,0 +1,31 @@
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+- job: TerraformTestJob
+  displayName: 'Test Terraform Script'
+  steps:
+  - checkout: self
+
+  - task: UseDotNet@2
+    displayName: 'Install DotNet SDK'
+    inputs:
+      packageType: 'sdk'
+      version: '3.1.x'
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+
+  - script: |
+      # Installation de Terraform
+      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
+      sudo apt-get update && sudo apt-get install terraform
+
+      # Initialisation de Terraform
+      terraform init
+
+      # Planification de Terraform
+      terraform plan
+    displayName: 'Test Terraform Configuration'
