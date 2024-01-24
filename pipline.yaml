@@ -17,15 +17,23 @@ jobs:
       version: '3.1.x'
       installationPath: $(Agent.ToolsDirectory)/dotnet
 
+  - task: UseNode@2
+    displayName: 'Install Node.js'
+    inputs:
+      version: '10.x'
+
   - script: |
-      # Installation de Terraform
+      # Installer Terraform
       curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
       echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
       sudo apt-get update && sudo apt-get install terraform
 
-      # Initialisation de Terraform
+      # Initialiser Terraform
       terraform init
 
-      # Planification de Terraform
+      # Planifier Terraform
       terraform plan
-    displayName: 'Test Terraform Configuration'
+
+      # Appliquer Terraform en mode auto-approve
+      terraform apply -auto-approve
+    displayName: 'Test and Apply Terraform Configuration'
