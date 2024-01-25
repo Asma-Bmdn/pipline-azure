@@ -12,12 +12,12 @@ stages:
     steps:
     - checkout: self
 
-    - task: UseDotNet@2
-      displayName: "Installer Maven"
-      inputs:
-        version: "JDKVersion"
-        mavenVersionOption: "Path"
-        mavenPathOption: "MavenWrapper"
+    - task: Maven@3
+  displayName: 'Installer Maven'
+  inputs:
+    mavenVersionOption: 'Default'
+    mavenPathOption: 'Default'
+
 
     - script: |
         # Vider la mémoire vive
