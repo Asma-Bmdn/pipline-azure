@@ -12,12 +12,6 @@ stages:
     steps:
     - checkout: self
 
-    - task: Maven@3
-      displayName: 'Installer Maven'
-      inputs:
-       mavenVersionOption: 'Default'
-       mavenPathOption: 'Default'
-
 
     - script: |
         # Vider la mémoire vive
