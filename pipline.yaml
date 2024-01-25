@@ -2,22 +2,22 @@ trigger:
 - main
 
 pool:
-  name: 'My-pool'
+  name: "My-pool"
 
 stages:
 - stage: MiseAJourInfrastructureAzure
   jobs:
   - job: MiseAJourJob
-    displayName: 'Mise à jour de l'infrastructure Azure'
+    displayName: "Mise à jour de l'infrastructure Azure"
     steps:
     - checkout: self
 
     - task: UseDotNet@2
-      displayName: 'Installer Maven'
+      displayName: "Installer Maven"
       inputs:
-        version: '3.9'
-        mavenVersionOption: 'Path'
-        mavenPathOption: 'MavenWrapper'
+        version: "3.9"
+        mavenVersionOption: "Path"
+        mavenPathOption: "MavenWrapper"
 
     - script: |
         # Vider la mémoire vive
@@ -30,4 +30,5 @@ stages:
         # terraform init and apply
         terraform init
         terraform apply --auto-approve
-      displayName: 'Mise à jour de l'infrastructure Azure'
+      displayName: "Mise à jour de l'infrastructure Azure"
+
