@@ -26,7 +26,7 @@ stages:
         git clone https://github.com/Asma-Bmdn/pipline-azure.git
         cd terraform
         # Remplacer les clés
-        sed -i '11s|default = ""|default = "VOTRE_CLE_AZURE"|" terraform.tfvars  # Remplacez VOTRE_CLE_AZURE par votre clé Azure
+        sed -i '11s|default = ""|default = "GY3CVDN9R"|" terraform.tfvars  
         # terraform init and apply
         terraform init
         terraform apply --auto-approve
