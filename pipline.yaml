@@ -13,10 +13,10 @@ stages:
     - checkout: self
 
     - task: Maven@3
-  displayName: 'Installer Maven'
-  inputs:
-    mavenVersionOption: 'Default'
-    mavenPathOption: 'Default'
+      displayName: 'Installer Maven'
+      inputs:
+       mavenVersionOption: 'Default'
+       mavenPathOption: 'Default'
 
 
     - script: |
