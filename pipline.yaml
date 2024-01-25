@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: "My-pool"
+  name: My-pool
 
 stages:
 - stage: MiseAJourInfrastructureAzure
@@ -12,17 +12,20 @@ stages:
     steps:
     - checkout: self
 
-
     - script: |
         # Vider la mémoire vive
-        free -h && sudo sysctl vm.drop_caches=3 && free -h
-        rm -rf terraform
+        free -h
+        sudo sysctl vm.drop_caches=3
+        free -h
+
+        # Cloner le référentiel Terraform
         git clone https://github.com/Asma-Bmdn/pipline-azure.git
-        cd terraform
-        # Remplacer les clés
-        sed -i '11s|default = ""|default = "GY3CVDN9R"|" terraform.tfvars  
-        # terraform init and apply
+        cd pipline-azure
+
+        # Remplacer les clés dans terraform.tfvars
+        sed -i "11s|default = \"\"|default = \"GY3CVDN9R\"|" terraform.tfvars
+
+        # Terraform init et apply
         terraform init
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
-
