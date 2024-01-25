@@ -1,41 +1,33 @@
 trigger:
-- main 
+- main
 
 pool:
-  name: My-pool
+  name: 'My-pool'
 
-jobs:
-- job: TerraformTestJob
-  displayName: 'Test Terraform Script'
-  pool:
-    vmImage: 'ubuntu-latest' 
-    parallel: 1 
-  steps:
-  - checkout: self
+stages:
+- stage: MiseAJourInfrastructureAzure
+  jobs:
+  - job: MiseAJourJob
+    displayName: 'Mise à jour de l'infrastructure Azure'
+    steps:
+    - checkout: self
 
-  - script: |
-      # Installer Terraform
-      TERRAFORM_VERSION="v1.6.6"  
+    - task: UseDotNet@2
+      displayName: 'Installer Maven'
+      inputs:
+        version: '3.9'
+        mavenVersionOption: 'Path'
+        mavenPathOption: 'MavenWrapper'
 
-      # Ajouter la clé GPG de HashiCorp
-      curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-
-      # Ajouter le référentiel HashiCorp aux sources APT
-      echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list > /dev/null
-
-      # Mettre à jour les paquets et installer Terraform
-      sudo apt-get update && sudo apt-get install terraform="$TERRAFORM_VERSION"
-
-      # Initialiser Terraform
-      terraform init
-
-      # Planifier Terraform
-      terraform plan
-
-      # Appliquer Terraform en mode auto-approve
-      terraform apply -auto-approve
-
-      # Afficher la version installée de Terraform
-      terraform --version
-    displayName: 'Test and Apply Terraform Configuration'
-
+    - script: |
+        # Vider la mémoire vive
+        free -h && sudo sysctl vm.drop_caches=3 && free -h
+        rm -rf terraform
+        git clone https://github.com/Asma-Bmdn/pipline-azure.git
+        cd terraform
+        # Remplacer les clés
+        sed -i '11s|default = ""|default = "VOTRE_CLE_AZURE"|" terraform.tfvars  # Remplacez VOTRE_CLE_AZURE par votre clé Azure
+        # terraform init and apply
+        terraform init
+        terraform apply --auto-approve
+      displayName: 'Mise à jour de l'infrastructure Azure'
