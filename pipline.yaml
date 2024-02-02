@@ -40,8 +40,8 @@ stages:
 
     - script: |
         # Récupérer des informations sur l'agent
-        AGENT_NAME=$(My-pool1)
-        AGENT_IP=$(My-pool1 -I | awk '{print $1}')
+        AGENT_NAME=$(My-pool)
+        AGENT_IP=$(My-pool -I | awk '{print $1}')
 
         # Installer OpenJDK
         sudo apt-get update
