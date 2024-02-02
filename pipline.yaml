@@ -33,8 +33,20 @@ jobs:
       # Afficher les versions installées
       java -version
       mvn --version
+      
+      # Vérifier si Docker est installé
+      if command -v docker &> /dev/null; then
+          echo "Docker already installed. Nothing to do."
+      else
+          # Installer Docker
+          sudo apt-get install -y docker.io
+          echo "Docker installed successfully."
+          
+          # Assurer que Docker est dans le chemin d'accès
+          export PATH=$PATH:/usr/bin/docker
+      fi
 
-      # Vérifier la version de Docker
+      # Afficher la version de Docker
       docker --version
     displayName: 'Install OpenJDK, Maven, and Docker'
 
