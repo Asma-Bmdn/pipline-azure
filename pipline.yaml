@@ -30,46 +30,33 @@ stages:
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
       
- 
-- job: BuildAndRunDockerContainer
-  displayName: 'Build and Run Docker Container'
-  steps:
-  - checkout: self
+ stages:
+- stage: InstallerMavenEtOpenJDK
+  jobs:
+  - job: InstallerMavenEtOpenJDKJob
+    displayName: "Installer Maven et OpenJDK"
+    steps:
+    - checkout: self
 
-  - script: |
-      # Vérifier si OpenJDK est installé
-      if command -v java &> /dev/null; then
-          echo "OpenJDK already installed. Nothing to do."
-      else
-          # Installer OpenJDK
-          sudo apt-get update
-          sudo apt-get install -y openjdk-11-jdk
-          echo "OpenJDK installed successfully."
-      fi
+    - script: |
+        # Récupérer des informations sur l'agent
+        AGENT_NAME=$(My-pool1)
+        AGENT_IP=$(My-pool1 -I | awk '{print $1}')
 
-      # Vérifier si Maven est installé
-      if command -v mvn &> /dev/null; then
-          echo "Maven already installed. Nothing to do."
-      else
-          # Installer Maven
-          sudo apt-get install -y maven
-          echo "Maven installed successfully."
-      fi
+        # Installer OpenJDK
+        sudo apt-get update
+        sudo apt-get install -y openjdk-11-jdk
 
-      # Afficher les versions installées
-      java -version
-      mvn --version
+        # Installer Maven
+        sudo apt-get install -y maven
 
-      # Vérifier la version de Docker
-      docker --version
-    displayName: 'Install OpenJDK, Maven, and Docker'
+        # Afficher les versions installées
+        java -version
+        mvn --version
 
-  - task: Docker@2
-    inputs:
-      command: 'build'
-      Dockerfile: 'Dockerfile'
-      tags: '/docker-repository:latest'
+        # Afficher des informations sur la machine virtuelle
+        echo "Machine virtuelle : $AGENT_NAME"
+        echo "Adresse IP : $AGENT_IP"
+      displayName: "Installer Maven et OpenJDK"
 
-  - script: 'docker run -it docker-repository:latest'
-    displayName: 'Run Docker Container'
 
