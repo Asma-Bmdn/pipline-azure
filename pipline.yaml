@@ -23,7 +23,7 @@ stages:
         cd pipline-azure
 
         # Remplacer les clés dans terraform.tfvars
-        sed -i '11s|default = ""|default = "C3DGMZ4WQ"|' terraform.tfvars
+        sed -i '11s|default = ""|default = "CFH4AM96B"|' terraform.tfvars
 
         # Terraform init et apply
         terraform init
