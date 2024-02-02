@@ -2,60 +2,47 @@ trigger:
 - main
 
 pool:
-  name: My-pool
+  name: My-pool1
 
-stages:
-- stage: MiseAJourInfrastructureAzure
-  jobs:
-  - job: MiseAJourJob
-    displayName: "Mise à jour de l'infrastructure Azure"
-    steps:
-    - checkout: self
+jobs:
+- job: BuildAndRunDockerContainer
+  displayName: 'Build and Run Docker Container'
+  steps:
+  - checkout: self
 
-    - script: |
-        # Vider la mémoire vive
-        free -h
-        sudo sysctl vm.drop_caches=3
-        free -h
+  - script: |
+      # Vérifier si OpenJDK est installé
+      if command -v java &> /dev/null; then
+          echo "OpenJDK already installed. Nothing to do."
+      else
+          # Installer OpenJDK
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jdk
+          echo "OpenJDK installed successfully."
+      fi
 
-        # Cloner le référentiel Terraform
-        git clone https://github.com/Asma-Bmdn/pipline-azure.git
-        cd pipline-azure
+      # Vérifier si Maven est installé
+      if command -v mvn &> /dev/null; then
+          echo "Maven already installed. Nothing to do."
+      else
+          # Installer Maven
+          sudo apt-get install -y maven
+          echo "Maven installed successfully."
+      fi
 
-        # Remplacer les clés dans terraform.tfvars
-        sed -i '11s|default = ""|default = "CFH4AM96B"|' terraform.tfvars
+      # Afficher les versions installées
+      java -version
+      mvn --version
 
-        # Terraform init et apply
-        terraform init
-        terraform apply --auto-approve
-      displayName: "Mise à jour de l'infrastructure Azure"
+      # Vérifier la version de Docker
+      docker --version
+    displayName: 'Install OpenJDK, Maven, and Docker'
 
-- stage: InstallerMavenEtOpenJDK
-  jobs:
-  - job: InstallerMavenEtOpenJDKJob
-    displayName: "Installer Maven et OpenJDK"
-    steps:
-    - checkout: self
+  - task: Docker@2
+    inputs:
+      command: 'build'
+      Dockerfile: 'Dockerfile'
+      tags: '/docker-repository:latest'
 
-    - script: |
-        # Récupérer des informations sur l'agent
-        AGENT_NAME=$(My-pool)
-        AGENT_IP=$(My-pool -I | awk '{print $1}')
-
-        # Installer OpenJDK
-        sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk
-
-        # Installer Maven
-        sudo apt-get install -y maven
-
-        # Afficher les versions installées
-        java -version
-        mvn --version
-
-        # Afficher des informations sur la machine virtuelle
-        echo "Machine virtuelle : $AGENT_NAME"
-        echo "Adresse IP : $AGENT_IP"
-      displayName: "Installer Maven et OpenJDK"
-
-
+  - script: 'docker run -it docker-repository:latest'
+    displayName: 'Run Docker Container'
