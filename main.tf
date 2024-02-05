@@ -16,7 +16,6 @@ resource "azurerm_network_security_group" "nsg" {
   # Autres attributs de la ressource...
 }
 
-# ...
 
 # Créer une base de données Azure SQL
 resource "azurerm_sql_server" "sql_server" {
@@ -25,7 +24,7 @@ resource "azurerm_sql_server" "sql_server" {
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
   administrator_login          = "sqladmin"
-  administrator_login_password = "sdlP@ssw0rd"  # Remplacez par votre mot de passe sécurisé
+  administrator_login_password = "P@ssw0rd"  # Remplacez par votre mot de passe sécurisé
 }
 
 resource "azurerm_sql_database" "sql_db" {
@@ -34,8 +33,13 @@ resource "azurerm_sql_database" "sql_db" {
   location                    = azurerm_resource_group.RG.location
   server_name                 = azurerm_sql_server.sql_server.name
   edition                     = "Standard"
-  requested_service_objective = "S0"  # SKU pour les performances, ajustez selon vos besoins
+  
+  sku {
+    name   = "S0"  # SKU pour les performances, ajustez selon vos besoins
+    tier   = "Standard"
+  }
 }
+
 
 # Créer un réseau virtuel et un sous-réseau
 resource "azurerm_virtual_network" "AZVN" {
