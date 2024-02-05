@@ -24,7 +24,7 @@ resource "azurerm_sql_server" "sql_server" {
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
   administrator_login          = "sqladmin"
-  administrator_login_password = "P@ssw0rd"  # Remplacez par votre mot de passe sécurisé
+  administrator_login_password = "sqlP@ssw0rd"  
 }
 
 resource "azurerm_sql_database" "sql_db" {
@@ -33,11 +33,6 @@ resource "azurerm_sql_database" "sql_db" {
   location                    = azurerm_resource_group.RG.location
   server_name                 = azurerm_sql_server.sql_server.name
   edition                     = "Standard"
-  
-  sku {
-    name   = "S0"  # SKU pour les performances, ajustez selon vos besoins
-    tier   = "Standard"
-  }
 }
 
 
