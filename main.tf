@@ -19,12 +19,12 @@ resource "azurerm_network_security_group" "nsg" {
 
 # Créer une base de données Azure SQL
 resource "azurerm_sql_server" "sql_server" {
-  name                         = "my-sql-server"
+  name                         = "asma-sql-server"
   resource_group_name          = azurerm_resource_group.RG.name
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
   administrator_login          = "sqladmin"
-  administrator_login_password = "sqlP@ssw0rd"  
+  administrator_login_password = "P@ssw0rd"  # Remplacez par votre mot de passe sécurisé
 }
 
 resource "azurerm_sql_database" "sql_db" {
