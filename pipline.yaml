@@ -33,20 +33,20 @@ stages:
 - stage: InstallerMavenEtOpenJDK
   jobs:
   - job: BuildDockerImage
-  displayName: 'Build Docker image with Maven and OpenJDK'
-  container:
-    image: ubuntu:latest  # Utiliser une image Ubuntu comme base
-  steps:
-  - checkout: self
+    displayName: 'Build Docker image with Maven and OpenJDK'
+    container:
+      image: ubuntu:latest  # Utiliser une image Ubuntu comme base
+    steps:
+    - checkout: self
 
-  # Installer Docker
-  - script: |
-      sudo apt-get update
-      sudo apt-get install -y docker.io
-    displayName: 'Install Docker'
+    # Installer Docker
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+      displayName: 'Install Docker'
 
-  # Installer OpenJDK et Maven
-  - script: |
-      sudo apt-get update
-      sudo apt-get install -y openjdk-11-jdk maven
-    displayName: 'Install OpenJDK and Maven'
+    # Installer OpenJDK et Maven
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y openjdk-11-jdk maven
+      displayName: 'Install OpenJDK and Maven'
