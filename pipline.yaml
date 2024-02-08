@@ -57,6 +57,7 @@ stages:
 
     # Exécuter un conteneur basé sur l'image avec Maven et OpenJDK installés
     - script: |
-        sudo docker run -it --rm maven-openjdk mvn --version
-        sudo docker run -it --rm maven-openjdk java -version
+        # Remplacez les informations de connexion à la base de données dans les variables d'environnement
+        sudo docker run -it --rm -e DATABASE_HOST=azurerm_sql_server.sql_server.name -e DATABASE_USER=sqladmin -e DATABASE_PASSWORD=P@ssw0rd maven-openjdk mvn --version
+        sudo docker run -it --rm -e DATABASE_HOST=azurerm_sql_server.sql_server.name -e DATABASE_USER=sqladmin -e DATABASE_PASSWORD=P@ssw0rd maven-openjdk java -version
       displayName: 'Verify Maven and OpenJDK installation in Docker container'
