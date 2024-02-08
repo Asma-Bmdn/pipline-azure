@@ -23,40 +23,37 @@ stages:
         cd pipline-azure
 
         # Remplacer les clés dans terraform.tfvars
-        sudo sed -i "11s|default = \"\"|default = \"C3DGMZ4WQ\"|" terraform.tfvars
+        sed -i "11s|default = \"\"|default = \"C3DGMZ4WQ\"|" terraform.tfvars
 
         # Terraform init et apply
-        sudo terraform init
-        sudo terraform apply --auto-approve
+        terraform init
+        terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
    
 - stage: InstallerMavenEtOpenJDK
   jobs:
-  - job: BuildDockerImage
-    displayName: 'Build Docker image with Maven and OpenJDK'
-    container:
-      image: ubuntu:latest  # Utiliser une image Ubuntu comme base
+  - job: InstallerMavenEtOpenJDKJob
+    displayName: "Installer Maven et OpenJDK"
     steps:
     - checkout: self
 
-    # Créer un Dockerfile pour construire l'image
     - script: |
-        echo "FROM ubuntu:latest" > Dockerfile
-        echo "RUN yum install -y java-11-openjdk-devel maven" >> Dockerfile
-      displayName: 'Create Dockerfile'
+        # Récupérer des informations sur l'agent
+        AGENT_NAME=$(My-pool1)
+        AGENT_IP=$(My-pool1 -I | awk '{print $1}')
 
-    # Construire l'image Docker
-    - script: |
-        sudo docker build -t maven-openjdk .
-      displayName: 'Build Docker image'
+        # Installer OpenJDK
+        sudo apt-get update
+        sudo apt-get install -y openjdk-11-jdk
 
-    # Vérifier l'image Docker créée
-    - script: |
-        sudo docker images
-      displayName: 'Check Docker images'
+        # Installer Maven
+        sudo apt-get install -y maven
 
-    # Exécuter un conteneur basé sur l'image avec Maven et OpenJDK installés
-    - script: |
-        sudo docker run -it --rm maven-openjdk mvn --version
-        sudo docker run -it --rm maven-openjdk java -version
-      displayName: 'Verify Maven and OpenJDK installation in Docker container'
+        # Afficher les versions installées
+        java -version
+        mvn --version
+
+        # Afficher des informations sur la machine virtuelle
+        echo "Machine virtuelle : $AGENT_NAME"
+        echo "Adresse IP : $AGENT_IP"
+      displayName: "Installer Maven et OpenJDK"
