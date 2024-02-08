@@ -23,11 +23,11 @@ stages:
         cd pipline-azure
 
         # Remplacer les clés dans terraform.tfvars
-        sed -i "11s|default = \"\"|default = \"C3DGMZ4WQ\"|" terraform.tfvars
+        sudo sed -i "11s|default = \"\"|default = \"C3DGMZ4WQ\"|" terraform.tfvars
 
         # Terraform init et apply
-        terraform init
-        terraform apply --auto-approve
+        sudo terraform init
+        sudo terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
    
 - stage: InstallerMavenEtOpenJDK
@@ -47,16 +47,16 @@ stages:
 
     # Construire l'image Docker
     - script: |
-        docker build -t maven-openjdk .
+        sudo docker build -t maven-openjdk .
       displayName: 'Build Docker image'
 
     # Vérifier l'image Docker créée
     - script: |
-        docker images
+        sudo docker images
       displayName: 'Check Docker images'
 
     # Exécuter un conteneur basé sur l'image avec Maven et OpenJDK installés
     - script: |
-        docker run -it --rm maven-openjdk mvn --version
-        docker run -it --rm maven-openjdk java -version
+        sudo docker run -it --rm maven-openjdk mvn --version
+        sudo docker run -it --rm maven-openjdk java -version
       displayName: 'Verify Maven and OpenJDK installation in Docker container'
