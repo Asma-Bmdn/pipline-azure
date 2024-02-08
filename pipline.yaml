@@ -30,6 +30,7 @@ stages:
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
    
+stages:
 - stage: InstallerMavenEtOpenJDK
   jobs:
   - job: BuildDockerImage
@@ -39,14 +40,24 @@ stages:
     steps:
     - checkout: self
 
-    # Installer Docker
+    # Créer un Dockerfile pour construire l'image
     - script: |
-        sudo apt-get update
-        sudo apt-get install -y docker.io
-      displayName: 'Install Docker'
+        echo "FROM ubuntu:latest" > Dockerfile
+        echo "RUN apt-get update && apt-get install -y openjdk-11-jdk maven" >> Dockerfile
+      displayName: 'Create Dockerfile'
 
-    # Installer OpenJDK et Maven
+    # Construire l'image Docker
     - script: |
-        sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk maven
-      displayName: 'Install OpenJDK and Maven'
+        docker build -t maven-openjdk .
+      displayName: 'Build Docker image'
+
+    # Vérifier l'image Docker créée
+    - script: |
+        docker images
+      displayName: 'Check Docker images'
+
+    # Exécuter un conteneur basé sur l'image avec Maven et OpenJDK installés
+    - script: |
+        docker run -it --rm maven-openjdk mvn --version
+        docker run -it --rm maven-openjdk java -version
+      displayName: 'Verify Maven and OpenJDK installation in Docker container'
