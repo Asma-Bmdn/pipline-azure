@@ -42,7 +42,7 @@ stages:
     # Créer un Dockerfile pour construire l'image
     - script: |
         echo "FROM ubuntu:latest" > Dockerfile
-        echo "RUN apt-get update && apt-get install -y openjdk-11-jdk maven" >> Dockerfile
+        echo "RUN yum install -y java-11-openjdk-devel maven" >> Dockerfile
       displayName: 'Create Dockerfile'
 
     # Construire l'image Docker
@@ -57,7 +57,6 @@ stages:
 
     # Exécuter un conteneur basé sur l'image avec Maven et OpenJDK installés
     - script: |
-        # Remplacez les informations de connexion à la base de données dans les variables d'environnement
-        sudo docker run -it --rm -e DATABASE_HOST=azurerm_sql_server.sql_server.name -e DATABASE_USER=sqladmin -e DATABASE_PASSWORD=P@ssw0rd maven-openjdk mvn --version
-        sudo docker run -it --rm -e DATABASE_HOST=azurerm_sql_server.sql_server.name -e DATABASE_USER=sqladmin -e DATABASE_PASSWORD=P@ssw0rd maven-openjdk java -version
+        sudo docker run -it --rm maven-openjdk mvn --version
+        sudo docker run -it --rm maven-openjdk java -version
       displayName: 'Verify Maven and OpenJDK installation in Docker container'
