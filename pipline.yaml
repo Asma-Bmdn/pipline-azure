@@ -30,7 +30,6 @@ stages:
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
    
-stages:
 - stage: InstallerMavenEtOpenJDK
   jobs:
   - job: BuildDockerImage
