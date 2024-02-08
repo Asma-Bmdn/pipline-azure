@@ -32,7 +32,7 @@ stages:
    
 - stage: InstallerMavenEtOpenJDK
   jobs:
-- job: BuildDockerImage
+  - job: BuildDockerImage
   displayName: 'Build Docker image with Maven and OpenJDK'
   container:
     image: ubuntu:latest  # Utiliser une image Ubuntu comme base
