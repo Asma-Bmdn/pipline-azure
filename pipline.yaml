@@ -32,28 +32,21 @@ stages:
    
 - stage: InstallerMavenEtOpenJDK
   jobs:
-  - job: InstallerMavenEtOpenJDKJob
-    displayName: "Installer Maven et OpenJDK"
-    steps:
-    - checkout: self
+- job: BuildDockerImage
+  displayName: 'Build Docker image with Maven and OpenJDK'
+  container:
+    image: ubuntu:latest  # Utiliser une image Ubuntu comme base
+  steps:
+  - checkout: self
 
-    - script: |
-        # Récupérer des informations sur l'agent
-        AGENT_NAME=$(My-pool1)
-        AGENT_IP=$(My-pool1 -I | awk '{print $1}')
+  # Installer Docker
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y docker.io
+    displayName: 'Install Docker'
 
-        # Installer OpenJDK
-        sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk
-
-        # Installer Maven
-        sudo apt-get install -y maven
-
-        # Afficher les versions installées
-        java -version
-        mvn --version
-
-        # Afficher des informations sur la machine virtuelle
-        echo "Machine virtuelle : $AGENT_NAME"
-        echo "Adresse IP : $AGENT_IP"
-      displayName: "Installer Maven et OpenJDK"
+  # Installer OpenJDK et Maven
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y openjdk-11-jdk maven
+    displayName: 'Install OpenJDK and Maven'
