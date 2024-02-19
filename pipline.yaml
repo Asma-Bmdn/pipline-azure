@@ -3,26 +3,14 @@ trigger:
 
 pool: 
   name: My-pool
-
-stages:
-- stage: PreparerInfra
-  jobs:
-  - job: PreparerJob
-    displayName: "Préparation de l'infrastructure"
-    steps:
-    - checkout: self
-
-    - script: |
-        # Installer Docker
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        sudo sh get-docker.sh
-
-      displayName: "Installer Docker"
   
+stages:
 - stage: MiseAJourInfrastructureAzure
   jobs:
   - job: MiseAJourJob
     displayName: "Mise à jour de l'infrastructure Azure"
+    pool: 
+      name: my-pool9
     steps:
     - checkout: self
 
@@ -43,6 +31,22 @@ stages:
         terraform init
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
+
+- stage: PreparerInfra
+  jobs:
+  - job: PreparerJob
+    displayName: "Préparation de l'infrastructure"
+    pool: 
+      name: my-pool9
+    steps:
+    - checkout: self
+
+    - script: |
+        # Installer Docker
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
+
+      displayName: "Installer Docker"
   
 - stage: InstallerMavenEtOpenJDK
   jobs:
