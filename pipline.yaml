@@ -3,14 +3,12 @@ trigger:
 
 pool: 
   name: My-pool
-  
+
 stages:
 - stage: MiseAJourInfrastructureAzure
   jobs:
   - job: MiseAJourJob
     displayName: "Mise à jour de l'infrastructure Azure"
-    pool: 
-      name: my-pool9
     steps:
     - checkout: self
 
