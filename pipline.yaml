@@ -5,6 +5,20 @@ pool:
   name: My-pool
 
 stages:
+- stage: PreparerInfra
+  jobs:
+  - job: PreparerJob
+    displayName: "Préparation de l'infrastructure"
+    steps:
+    - checkout: self
+
+    - script: |
+        # Installer Docker
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
+
+      displayName: "Installer Docker"
+  
 - stage: MiseAJourInfrastructureAzure
   jobs:
   - job: MiseAJourJob
@@ -29,20 +43,6 @@ stages:
         terraform init
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
-
-- stage: PréparationDeLInfra
-  jobs:
-  - job: PréparationJob
-    displayName: "Préparation de l'infrastructure"
-    steps:
-    - checkout: self
-
-    - script: |
-        # Installer Docker
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        sudo sh get-docker.sh
-
-      displayName: "Installer Docker"
   
 - stage: InstallerMavenEtOpenJDK
   jobs:
