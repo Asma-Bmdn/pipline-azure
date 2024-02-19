@@ -41,8 +41,16 @@ stages:
 
     - script: |
         # Installer Docker
+        sudo apt-get update
+        sudo apt-get install -y curl
         curl -fsSL https://get.docker.com -o get-docker.sh
         sudo sh get-docker.sh
+
+        # Ajouter l'utilisateur au groupe Docker
+        sudo usermod -aG docker $USER
+
+        # Déconnexion et reconnexion pour appliquer les changements
+        exec sudo su - $USER
 
       displayName: "Installer Docker"
   
