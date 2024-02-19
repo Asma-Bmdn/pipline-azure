@@ -1,7 +1,7 @@
 trigger:
 - main
 
-pool:
+pool: 
   name: My-pool
 
 stages:
@@ -29,7 +29,9 @@ stages:
         terraform init
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
-   
+  
+   pool: 
+        name: my-pool9
 - stage: InstallerMavenEtOpenJDK
   jobs:
   - job: InstallerMavenEtOpenJDKJob
