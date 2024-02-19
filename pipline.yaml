@@ -29,6 +29,20 @@ stages:
         terraform init
         terraform apply --auto-approve
       displayName: "Mise à jour de l'infrastructure Azure"
+
+- stage: PréparationDeLInfra
+  jobs:
+  - job: PréparationJob
+    displayName: "Préparation de l'infrastructure"
+    steps:
+    - checkout: self
+
+    - script: |
+        # Installer Docker
+        curl -fsSL https://get.docker.com -o get-docker.sh
+        sudo sh get-docker.sh
+
+      displayName: "Installer Docker"
   
 - stage: InstallerMavenEtOpenJDK
   jobs:
@@ -40,18 +54,19 @@ stages:
     - checkout: self
 
     - script: |
-        # Installer OpenJDK
-        sudo apt-get update
-        sudo apt-get install -y openjdk-11-jdk
+        # Créer un conteneur Docker à partir de l'image openjdk:latest
+        docker run --name maven-openjdk -d openjdk:latest tail -f /dev/null
 
-        # Installer Maven
-        sudo apt-get install -y maven
+        # Installer Maven à l'intérieur du conteneur
+        docker exec maven-openjdk bash -c 'apt-get update && apt-get install -y maven'
+
+        # Installer OpenJDK à l'intérieur du conteneur
+        docker exec maven-openjdk bash -c 'apt-get update && apt-get install -y openjdk-11-jdk'
 
         # Afficher les versions installées
-        java -version
-        mvn --version
+        docker exec maven-openjdk java -version
+        docker exec maven-openjdk mvn --version
 
-        # Afficher des informations sur la machine virtuelle
-        echo "Machine virtuelle : $(hostname)"
-        echo "Adresse IP : $(hostname -I | awk '{print $1}')"
+        # Supprimer le conteneur après utilisation
+        docker rm -f maven-openjdk
       displayName: "Installer Maven et OpenJDK"
