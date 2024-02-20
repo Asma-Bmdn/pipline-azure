@@ -52,10 +52,10 @@ stages:
             sudo sh get-docker.sh
 
             # Ajouter l'utilisateur au groupe Docker
-            sudo usermod -aG docker $USER
+            sudo usermod -aG docker Admin_azure
 
             # Déconnexion et reconnexion pour appliquer les changements
-            exec sudo su - $USER
+            exec sudo su - Admin_azure
         fi
       displayName: "Installer Docker (si nécessaire)"
 
