@@ -19,7 +19,7 @@ resource "azurerm_network_security_group" "nsg" {
 
 # Créer une base de données Azure SQL
 resource "azurerm_sql_server" "sql_server" {
-  name                         = "asma13234254-sql-server"
+  name                         = "asma8-sql-server"
   resource_group_name          = azurerm_resource_group.RG.name
   location                     = azurerm_resource_group.RG.location
   version                      = "12.0"
@@ -28,7 +28,7 @@ resource "azurerm_sql_server" "sql_server" {
 }
 
 resource "azurerm_sql_database" "sql_db" {
-  name                        = "my-sql-database13234254"
+  name                        = "my-sql-database8"
   resource_group_name         = azurerm_resource_group.RG.name
   location                    = azurerm_resource_group.RG.location
   server_name                 = azurerm_sql_server.sql_server.name
