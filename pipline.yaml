@@ -40,19 +40,25 @@ stages:
     - checkout: self
 
     - script: |
-        # Installer Docker
-        sudo apt-get update
-        sudo apt-get install -y curl
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        sudo sh get-docker.sh
+        # Vérifier si Docker est déjà installé
+        if ! command -v docker &> /dev/null
+        then
+            echo "Docker est déjà installé. Rien à faire."
+        else
+            # Installer Docker
+            sudo apt-get update
+            sudo apt-get install -y curl
+            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo sh get-docker.sh
 
-        # Ajouter l'utilisateur au groupe Docker
-        sudo usermod -aG docker $USER
+            # Ajouter l'utilisateur au groupe Docker
+            sudo usermod -aG docker $USER
 
-        # Déconnexion et reconnexion pour appliquer les changements
-        exec sudo su - $USER
+            # Déconnexion et reconnexion pour appliquer les changements
+            exec sudo su - $USER
+        fi
+      displayName: "Installer Docker (si nécessaire)"
 
-      displayName: "Installer Docker"
   
 - stage: InstallerMavenEtOpenJDK
   jobs:
