@@ -28,36 +28,7 @@ stages:
         # Terraform init et apply
         terraform init
         terraform apply --auto-approve
-      displayName: "Mise à jour de l'infrastructure Azure"
-
-- stage: PreparerInfra
-  jobs:
-  - job: PreparerJob
-    displayName: "Préparation de l'infrastructure"
-    pool: 
-      name: my-pool9
-    steps:
-    - checkout: self
-
-    - script: |
-        # Vérifier si Docker est déjà installé
-        if ! command -v docker &> /dev/null
-        then
-            echo "Docker est déjà installé. Rien à faire."
-        else
-            # Installer Docker
-            sudo apt-get update
-            sudo apt-get install -y curl
-            curl -fsSL https://get.docker.com -o get-docker.sh
-            sudo sh get-docker.sh
-
-            # Ajouter l'utilisateur au groupe Docker
-            sudo usermod -aG docker Admin_azure
-
-            # Déconnexion et reconnexion pour appliquer les changements
-            exec sudo su - Admin_azure
-        fi
-      displayName: "Installer Docker (si nécessaire)"
+      displayName: "Mise à jour de l'infrastructure Azure
 
   
 - stage: InstallerMavenEtOpenJDK
