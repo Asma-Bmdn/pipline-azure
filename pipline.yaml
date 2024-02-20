@@ -28,8 +28,7 @@ stages:
         # Terraform init et apply
         terraform init
         terraform apply --auto-approve
-      displayName: "Mise à jour de l'infrastructure Azure
-
+      displayName: "Mise à jour de l'infrastructure Azure"
   
 - stage: InstallerMavenEtOpenJDK
   jobs:
